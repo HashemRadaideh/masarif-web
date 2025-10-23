@@ -1,5 +1,22 @@
 # Masarif
 
+<!--toc:start-->
+
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+- [Development server](#development-server)
+- [Code scaffolding](#code-scaffolding)
+- [Building](#building)
+- [Running unit tests](#running-unit-tests)
+- [Running end-to-end tests](#running-end-to-end-tests)
+- [Additional Resources](#additional-resources)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+<!--toc:end-->
+
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.18.
 
 ## Development server

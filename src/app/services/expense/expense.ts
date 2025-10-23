@@ -1,6 +1,10 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Expense, CreateExpense, UpdateExpense } from './expense.models';
+import {
+  Expense,
+  CreateExpense,
+  UpdateExpense,
+} from '../../models/expense/expense.models';
 import { ExpenseQuery } from './expense.query';
 import { environment } from '../../../environments/environment.development';
 

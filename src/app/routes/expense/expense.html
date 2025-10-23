@@ -1,0 +1,223 @@
+<div class="mx-auto max-w-7xl p-4 md:p-6">
+  <div class="grid grid-cols-12 gap-4">
+    <div class="col-span-12 md:col-span-4">
+      <p-card class="bg-accent! text-accent-foreground!">
+        <ng-template pTemplate="title">Balance</ng-template>
+        <div class="text-3xl font-bold">{{ format(balance()) }}</div>
+      </p-card>
+    </div>
+    <div class="col-span-12 md:col-span-4">
+      <p-card class="bg-accent! text-accent-foreground!">
+        <ng-template pTemplate="title">Total Income</ng-template>
+        <div class="text-3xl font-bold text-emerald-600">
+          {{ format(totalIncome()) }}
+        </div>
+      </p-card>
+    </div>
+    <div class="col-span-12 md:col-span-4">
+      <p-card class="bg-accent! text-accent-foreground!">
+        <ng-template pTemplate="title">Total Expense</ng-template>
+        <div class="text-3xl font-bold text-rose-600">
+          {{ format(totalExpense()) }}
+        </div>
+      </p-card>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-12 gap-4 mt-4">
+    <div class="col-span-12 md:col-span-7">
+      <p-card class="bg-accent! text-accent-foreground!">
+        <ng-template pTemplate="title">Income vs Expense (Monthly)</ng-template>
+        <p-chart
+          type="line"
+          [data]="lineData()"
+          [options]="lineOptions"
+          class="h-[280px]"
+        ></p-chart>
+      </p-card>
+    </div>
+    <div class="col-span-12 md:col-span-5">
+      <p-card class="bg-accent! text-accent-foreground!">
+        <ng-template pTemplate="title">Expenses by Category</ng-template>
+        <p-chart
+          type="doughnut"
+          [data]="doughnutData()"
+          [options]="doughnutOptions"
+          class="h-[280px]"
+        ></p-chart>
+      </p-card>
+    </div>
+  </div>
+
+  <p-card class="bg-accent! text-accent-foreground! mt-4">
+    <ng-template pTemplate="title">
+      <div class="flex justify-between">
+        <span> Recent Transactions </span>
+        <button
+          pButton
+          type="button"
+          icon="pi pi-plus"
+          label="Add"
+          (click)="onAdd()"
+        ></button>
+      </div>
+    </ng-template>
+
+    <p-table [value]="rows()" dataKey="id">
+      <ng-template pTemplate="header">
+        <tr>
+          <th class="bg-muted! text-muted-foreground!">Date</th>
+          <th class="bg-muted! text-muted-foreground!">Type</th>
+          <th class="bg-muted! text-muted-foreground!">Title</th>
+          <th class="bg-muted! text-muted-foreground!">Category</th>
+          <th class="bg-muted! text-muted-foreground!">Note</th>
+          <th class="bg-muted! text-muted-foreground! text-right">Amount</th>
+          <th class="bg-muted! text-muted-foreground! text-right w-28">
+            Actions
+          </th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-r>
+        <tr>
+          <td class="bg-accent/90! text-accent-foreground!">
+            {{ r.date | date: 'mediumDate' }}
+          </td>
+
+          <td class="bg-accent/90! text-accent-foreground!">
+            <p-tag
+              [value]="r.type"
+              [severity]="r.amount >= 0 ? 'success' : 'danger'"
+            ></p-tag>
+          </td>
+
+          <td class="bg-accent/90! text-accent-foreground!">
+            {{ r.title || '—' }}
+          </td>
+          <td class="bg-accent/90! text-accent-foreground! capitalize">
+            {{ r.category }}
+          </td>
+          <td class="bg-accent/90! text-accent-foreground!">{{ r.note }}</td>
+
+          <td
+            class="bg-accent/90! text-right font-semibold"
+            [ngClass]="r.amount >= 0 ? 'text-emerald-600' : 'text-rose-600'"
+          >
+            {{ format(r.amount) }}
+          </td>
+
+          <td class="bg-accent/90! text-right space-x-1">
+            <button
+              pButton
+              type="button"
+              icon="pi pi-pencil"
+              class="p-button-text p-button-sm"
+              (click)="onEdit(r)"
+            ></button>
+            <button
+              pButton
+              type="button"
+              icon="pi pi-trash"
+              severity="danger"
+              class="p-button-text p-button-sm"
+              (click)="confirmDelete(r)"
+            ></button>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </p-card>
+</div>
+
+<p-confirmDialog
+  [style]="{ width: '480px', maxWidth: '95vw' }"
+></p-confirmDialog>
+
+<p-dialog
+  [(visible)]="showAddDialog"
+  [modal]="true"
+  [style]="{ width: '560px', maxWidth: '95vw' }"
+  [header]="editId() ? 'Edit Expense' : 'Add Expense'"
+  (onHide)="onDialogHide()"
+>
+  <form [formGroup]="addForm" class="grid gap-3">
+    <div class="grid gap-2">
+      <label class="text-sm">Title</label>
+      <input pInputText formControlName="title" placeholder="e.g. Groceries" />
+    </div>
+
+    <div class="grid gap-2">
+      <label class="text-sm">Type</label>
+      <p-select
+        formControlName="type"
+        [options]="typeOptions"
+        optionLabel="label"
+        optionValue="value"
+        [style]="{ width: '100%' }"
+      ></p-select>
+    </div>
+
+    <div class="grid gap-2">
+      <label class="text-sm">Category</label>
+      <p-select
+        formControlName="category"
+        [options]="categoryOptions"
+        [editable]="true"
+        placeholder="Select or type…"
+        [style]="{ width: '100%' }"
+        [appendTo]="'body'"
+      ></p-select>
+    </div>
+
+    <div class="grid grid-cols-2 gap-3">
+      <div class="grid gap-2">
+        <label class="text-sm">Amount</label>
+        <p-inputNumber
+          formControlName="amount"
+          [mode]="'currency'"
+          [currency]="currency"
+          [minFractionDigits]="0"
+          [maxFractionDigits]="2"
+        ></p-inputNumber>
+      </div>
+
+      <div class="grid gap-2">
+        <label class="text-sm">Date</label>
+        <p-datepicker
+          formControlName="expenseDate"
+          [showIcon]="true"
+          [iconDisplay]="'input'"
+          [appendTo]="'body'"
+          [inputStyleClass]="'w-full'"
+        ></p-datepicker>
+      </div>
+    </div>
+
+    <div class="grid gap-2">
+      <label class="text-sm">Notes</label>
+      <textarea
+        pTextarea
+        rows="3"
+        formControlName="notes"
+        placeholder="Optional"
+      ></textarea>
+    </div>
+
+    <div class="mt-2 flex justify-end gap-2">
+      <button
+        pButton
+        type="button"
+        label="Cancel"
+        class="p-button-text"
+        (click)="closeDialog()"
+      ></button>
+      <button
+        pButton
+        type="button"
+        label="Save"
+        [disabled]="addForm.invalid || saving()"
+        (click)="save()"
+      ></button>
+    </div>
+  </form>
+</p-dialog>

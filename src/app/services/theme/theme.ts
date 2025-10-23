@@ -8,19 +8,16 @@ export class ThemeService {
   private media: MediaQueryList | null = null;
   private listener: ((e: MediaQueryListEvent) => void) | null = null;
 
-  // current selection the user made
   current = signal<Theme>('system');
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
     @Inject(DOCUMENT) private doc: Document,
   ) {
-    // initialize from storage or system on construct
     const stored = this.getStoredTheme();
     this.current.set(stored);
     this.applyTheme(stored);
 
-    // keep DOM class in sync if current changes (e.g., from UI)
     effect(() => {
       this.applyTheme(this.current());
     });
@@ -31,19 +28,17 @@ export class ThemeService {
     this.storeTheme(theme);
   }
 
-  // -------- internals --------
   private applyTheme(theme: Theme) {
     if (!isPlatformBrowser(this.platformId)) return;
 
-    const root = this.doc.documentElement; // <html>
+    const root = this.doc.documentElement;
 
-    // remove both then add the one we want (your CSS uses .light / .dark)
     root.classList.remove('light', 'dark');
 
     if (theme === 'system') {
       const prefersDark = this.getSystemPrefersDark();
       root.classList.add(prefersDark ? 'dark' : 'light');
-      this.bindSystemListener(); // react to OS changes
+      this.bindSystemListener();
     } else {
       root.classList.add(theme);
       this.unbindSystemListener();

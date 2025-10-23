@@ -3,13 +3,6 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'app-account',
   imports: [],
-  template: `
-    <p>
-      account works!
-    </p>
-  `,
-  styles: ``
+  templateUrl: './account.html',
 })
-export class AccountComponent {
-
-}
+export class AccountComponent {}

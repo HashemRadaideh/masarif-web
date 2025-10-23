@@ -6,8 +6,8 @@ export const routes: Routes = [
     pathMatch: 'full',
     data: { label: 'Dashboard' },
     async loadComponent() {
-      const m = await import('./expenses/expense');
-      return m.ExpensesComponent;
+      const m = await import('./expense/expense');
+      return m.ExpenseComponent;
     },
   },
   {

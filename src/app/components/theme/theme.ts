@@ -2,21 +2,12 @@ import { Component, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
-import { Theme, ThemeService } from './theme.service'; // your service path
+import { Theme, ThemeService } from '../../services/theme/theme';
 
 @Component({
-  selector: 'app-theme-toggle',
+  selector: 'app-theme',
   imports: [CommonModule, ButtonModule, TooltipModule],
-  template: `
-    <button
-      pButton
-      type="button"
-      [icon]="icon()"
-      (click)="cycle()"
-      class="p-button-text p-button-rounded p-button-sm text-foreground! bg-background! hover:bg-border! p-4!"
-      aria-label="Toggle theme"
-    ></button>
-  `,
+  templateUrl: './theme.html',
 })
 export class ThemeToggleComponent {
   private theme = inject(ThemeService);

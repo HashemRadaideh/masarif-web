@@ -5,7 +5,7 @@ import Aura from '@primeuix/themes/aura';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { MessageService } from 'primeng/api';
 
-import { routes } from './app.routes';
+import { routes } from './routes/app.routes';
 import {
   provideClientHydration,
   withEventReplay,
@@ -18,7 +18,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideClientHydration(withEventReplay()),
     provideHttpClient(withFetch()),
-    provideAnimations(), // <-- add this
+    provideAnimations(),
     providePrimeNG({
       theme: {
         preset: Aura,

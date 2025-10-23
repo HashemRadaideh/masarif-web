@@ -7,10 +7,8 @@ const KEY = 'sidebar:collapsed';
 export class SidebarService {
   private readonly isBrowser: boolean;
 
-  /** desktop: true = collapsed (icon rail), false = expanded */
   readonly collapsed = signal<boolean>(false);
 
-  /** mobile top-sheet visibility */
   readonly mobileOpen = signal<boolean>(false);
 
   constructor(@Inject(PLATFORM_ID) platformId: Object) {
@@ -20,7 +18,6 @@ export class SidebarService {
       this.collapsed.set(this.read());
       effect(() => localStorage.setItem(KEY, JSON.stringify(this.collapsed())));
 
-      // lock body scroll while the sheet is open
       effect(() => {
         const on = this.mobileOpen();
         document.body.classList.toggle('overflow-hidden', on);
@@ -35,7 +32,6 @@ export class SidebarService {
     this.collapsed.set(v);
   }
 
-  // mobile helpers
   openMobile() {
     this.mobileOpen.set(true);
   }
